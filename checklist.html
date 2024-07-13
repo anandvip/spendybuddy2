@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendyBuddy - Firebase Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: var(--background-color-light, #fff);
+            color: var(--text-color-light, #000);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checklist input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .notes {
+            margin-top: 10px;
+        }
+
+        .notes textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>SpendyBuddy Firebase Checklist</h1>
+    <ul class="checklist">
+        <li>
+            <input type="checkbox" id="step1">
+            <label for="step1">Create Firebase Project</label>
+        </li>
+        <li>
+            <input type="checkbox" id="step2">
+            <label for="step2">Register App with Firebase</label>
+        </li>
+        <li>
+            <input type="checkbox" id="step3">
+            <label for="step3">Install Firebase SDK</label>
+        </li>
+        <li>
+            <input type="checkbox" id="step4">
+            <label for="step4">Initialize Firebase in App</label>
+        </li>
+        <li>
+            <input type="checkbox" id="step5">
+            <label for="step5">Set Up Authentication Methods</label>
+        </li>
+    </ul>
+    <div class="notes">
+        <h3>Notes</h3>
+        <textarea id="notes" placeholder="Add your notes here..."></textarea>
+    </div>
+    <button id="save-progress">Save Progress</button>
+
+    <script>
+        // Load saved progress from local storage
+        document.addEventListener('DOMContentLoaded', () => {
+            const steps = document.querySelectorAll('.checklist input[type="checkbox"]');
+            const savedProgress = JSON.parse(localStorage.getItem('firebaseChecklist')) || {};
+            
+            steps.forEach(step => {
+                if (savedProgress[step.id]) {
+                    step.checked = true;
+                }
+            });
+
+            const savedNotes = localStorage.getItem('firebaseNotes');
+            if (savedNotes) {
+                document.getElementById('notes').value = savedNotes;
+            }
+        });
+
+        // Save progress to local storage
+        document.getElementById('save-progress').addEventListener('click', () => {
+            const steps = document.querySelectorAll('.checklist input[type="checkbox"]');
+            const progress = {};
+
+            steps.forEach(step => {
+                progress[step.id] = step.checked;
+            });
+
+            localStorage.setItem('firebaseChecklist', JSON.stringify(progress));
+
+            const notes = document.getElementById('notes').value;
+            localStorage.setItem('firebaseNotes', notes);
+
+            alert('Progress saved!');
+        });
+    </script>
+</body>
+
+</html>
