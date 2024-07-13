@@ -26,8 +26,8 @@
 
         .checklist li {
             display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+            flex-direction: column;
+            margin-bottom: 20px;
         }
 
         .checklist input[type="checkbox"] {
@@ -40,7 +40,7 @@
 
         .notes textarea {
             width: 100%;
-            height: 100px;
+            height: 60px;
         }
 
         button {
@@ -55,30 +55,51 @@
     <h1>SpendyBuddy Firebase Checklist</h1>
     <ul class="checklist">
         <li>
-            <input type="checkbox" id="step1">
-            <label for="step1">Create Firebase Project</label>
+            <div>
+                <input type="checkbox" id="step1">
+                <label for="step1">Create Firebase Project</label>
+            </div>
+            <div class="notes">
+                <textarea id="notes1" placeholder="Add your notes for step 1..."></textarea>
+            </div>
         </li>
         <li>
-            <input type="checkbox" id="step2">
-            <label for="step2">Register App with Firebase</label>
+            <div>
+                <input type="checkbox" id="step2">
+                <label for="step2">Register App with Firebase</label>
+            </div>
+            <div class="notes">
+                <textarea id="notes2" placeholder="Add your notes for step 2..."></textarea>
+            </div>
         </li>
         <li>
-            <input type="checkbox" id="step3">
-            <label for="step3">Install Firebase SDK</label>
+            <div>
+                <input type="checkbox" id="step3">
+                <label for="step3">Install Firebase SDK</label>
+            </div>
+            <div class="notes">
+                <textarea id="notes3" placeholder="Add your notes for step 3..."></textarea>
+            </div>
         </li>
         <li>
-            <input type="checkbox" id="step4">
-            <label for="step4">Initialize Firebase in App</label>
+            <div>
+                <input type="checkbox" id="step4">
+                <label for="step4">Initialize Firebase in App</label>
+            </div>
+            <div class="notes">
+                <textarea id="notes4" placeholder="Add your notes for step 4..."></textarea>
+            </div>
         </li>
         <li>
-            <input type="checkbox" id="step5">
-            <label for="step5">Set Up Authentication Methods</label>
+            <div>
+                <input type="checkbox" id="step5">
+                <label for="step5">Set Up Authentication Methods</label>
+            </div>
+            <div class="notes">
+                <textarea id="notes5" placeholder="Add your notes for step 5..."></textarea>
+            </div>
         </li>
     </ul>
-    <div class="notes">
-        <h3>Notes</h3>
-        <textarea id="notes" placeholder="Add your notes here..."></textarea>
-    </div>
     <button id="save-progress">Save Progress</button>
 
     <script>
@@ -93,9 +114,11 @@
                 }
             });
 
-            const savedNotes = localStorage.getItem('firebaseNotes');
-            if (savedNotes) {
-                document.getElementById('notes').value = savedNotes;
+            for (let i = 1; i <= steps.length; i++) {
+                const savedNotes = localStorage.getItem(`notes${i}`);
+                if (savedNotes) {
+                    document.getElementById(`notes${i}`).value = savedNotes;
+                }
             }
         });
 
@@ -110,8 +133,10 @@
 
             localStorage.setItem('firebaseChecklist', JSON.stringify(progress));
 
-            const notes = document.getElementById('notes').value;
-            localStorage.setItem('firebaseNotes', notes);
+            for (let i = 1; i <= steps.length; i++) {
+                const notes = document.getElementById(`notes${i}`).value;
+                localStorage.setItem(`notes${i}`, notes);
+            }
 
             alert('Progress saved!');
         });
