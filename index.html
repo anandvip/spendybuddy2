@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up / Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         @property --ripple {
             syntax: '<color>';
@@ -137,7 +137,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="auth-modal" class="modal">
         <div class="container ripple">
@@ -163,6 +162,7 @@
         <button id="sign-out">Sign Out</button>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
@@ -206,10 +206,11 @@
                     const user = result.user;
                     showUserInfo(user);
                     hideModal();
+                    toastr.success('Signed in with Google');
                 })
                 .catch((error) => {
                     console.error('Error during sign-in:', error);
-                    alert('Error during sign-in');
+                    toastr.error('Error during sign-in: ' + error.message);
                 });
         });
 
@@ -223,10 +224,11 @@
                     const user = userCredential.user;
                     showUserInfo(user);
                     hideModal();
+                    toastr.success('Signed in with Email/Password');
                 })
                 .catch((error) => {
                     console.error('Error during sign-in:', error);
-                    alert('Error during sign-in');
+                    toastr.error('Error during sign-in: ' + error.message);
                 });
         });
 
@@ -241,12 +243,12 @@
             sendSignInLinkToEmail(auth, email, actionCodeSettings)
                 .then(() => {
                     console.log('Sign-in link sent!');
-                    alert('Sign-in link sent! Check your email.');
+                    toastr.success('Sign-in link sent! Check your email.');
                     window.localStorage.setItem('emailForSignIn', email);
                 })
                 .catch((error) => {
                     console.error('Error sending sign-in link:', error);
-                    alert('Error sending sign-in link');
+                    toastr.error('Error sending sign-in link: ' + error.message);
                 });
         });
 
@@ -260,19 +262,21 @@
                     showUserInfo(result.user);
                     window.localStorage.removeItem('emailForSignIn');
                     hideModal();
+                    toastr.success('Signed in with Email Link');
                 })
                 .catch((error) => {
                     console.error('Error signing in with email link:', error);
-                    alert('Error signing in with email link');
+                    toastr.error('Error signing in with email link: ' + error.message);
                 });
         }
 
         document.getElementById('sign-out').addEventListener('click', () => {
             signOut(auth).then(() => {
                 hideUserInfo();
+                toastr.info('Signed out');
             }).catch((error) => {
                 console.error('Error during sign-out:', error);
-                alert('Error during sign-out');
+                toastr.error('Error during sign-out: ' + error.message);
             });
         });
 
@@ -288,5 +292,4 @@
         }
     </script>
 </body>
-
 </html>
