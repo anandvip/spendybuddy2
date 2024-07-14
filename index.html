@@ -135,6 +135,11 @@
         .user-info {
             display: none;
         }
+
+        .main-app {
+            display: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -162,19 +167,17 @@
         <button id="sign-out">Sign Out</button>
     </div>
 
+    <div id="main-app" class="main-app">
+        <!-- Main application content goes here -->
+        <h1>Welcome to SpendyBuddy</h1>
+        <p>This is your main application interface.</p>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA9RxzdklQ9dbYXYEcauJbPc97QuhFeboc",
-            authDomain: "spendybuddy.firebaseapp.com",
-            projectId: "spendybuddy",
-            storageBucket: "spendybuddy.appspot.com",
-            messagingSenderId: "471437105537",
-            appId: "1:471437105537:web:483289d111d2fe4598f080"
-        };
+        import firebaseConfig from './firebase-config.js';
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -205,6 +208,7 @@
                 .then((result) => {
                     const user = result.user;
                     showUserInfo(user);
+                    showMainApp();
                     hideModal();
                     toastr.success('Signed in with Google');
                 })
@@ -223,6 +227,7 @@
                 .then((userCredential) => {
                     const user = userCredential.user;
                     showUserInfo(user);
+                    showMainApp();
                     hideModal();
                     toastr.success('Signed in with Email/Password');
                 })
@@ -260,6 +265,7 @@
             signInWithEmailLink(auth, email, window.location.href)
                 .then((result) => {
                     showUserInfo(result.user);
+                    showMainApp();
                     window.localStorage.removeItem('emailForSignIn');
                     hideModal();
                     toastr.success('Signed in with Email Link');
@@ -273,6 +279,7 @@
         document.getElementById('sign-out').addEventListener('click', () => {
             signOut(auth).then(() => {
                 hideUserInfo();
+                hideMainApp();
                 toastr.info('Signed out');
             }).catch((error) => {
                 console.error('Error during sign-out:', error);
@@ -289,6 +296,14 @@
         function hideUserInfo() {
             document.querySelectorAll('.auth-buttons').forEach(button => button.style.display = 'flex');
             document.getElementById('user-info').style.display = 'none';
+        }
+
+        function showMainApp() {
+            document.getElementById('main-app').style.display = 'block';
+        }
+
+        function hideMainApp() {
+            document.getElementById('main-app').style.display = 'none';
         }
     </script>
 </body>
