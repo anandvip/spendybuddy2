@@ -21,6 +21,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Create public directory
+      run: mkdir -p public
+
     - name: Build the project
       run: |
         echo "const firebaseConfig = {" > public/firebase-config.js
@@ -37,4 +40,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public  # Ensure this is the directory containing your built files
+        publish_dir: ./public
