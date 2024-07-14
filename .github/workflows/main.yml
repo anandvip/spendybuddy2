@@ -6,25 +6,24 @@ on:
       - main  # or the branch you want to deploy
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: '14'
+        node-version: '16'  # Updated to a more recent LTS version
 
     - name: Install dependencies
-      run: npm install
-
-    - name: Create public directory
-      run: mkdir -p public
+      run: npm ci  # Uses package-lock.json for a clean install
 
     - name: Build the project
+      run: npm run build  # Assuming you have a build script in package.json
+
+    - name: Create Firebase config
       run: |
         echo "const firebaseConfig = {" > public/firebase-config.js
         echo "  apiKey: '${{ secrets.FIREBASE_API_KEY }}'," >> public/firebase-config.js
@@ -35,6 +34,9 @@ jobs:
         echo "  appId: '${{ secrets.FIREBASE_APP_ID }}'" >> public/firebase-config.js
         echo "};" >> public/firebase-config.js
         echo "export default firebaseConfig;" >> public/firebase-config.js
+
+    - name: List contents of public directory
+      run: ls -l public
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
